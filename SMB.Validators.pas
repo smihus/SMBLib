@@ -10,27 +10,25 @@ const
   TFloatInputKeysSet = ['+', '-', '0'..'9', '.', ',',
     Chr(VK_BACK), Chr(VK_DELETE), Chr(VK_RETURN), Chr(VK_TAB)];
 
-
-
 procedure KeyPressFloat(var Key: Char);
 
 procedure KeyPressInt(var Key: Char);
 
-function IsBetweenInt(const FieldName: String; const Value: Integer;
+function IsBetween(const FieldName: String; const Value: Integer;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
-  const BorderIncluded: Boolean = False): Boolean;
+  const BorderIncluded: Boolean = False): Boolean; overload;
 
-function TryStrToBetweenInt(const FieldName: String; const Value: String;
+function IsBetween(const FieldName: String; const Value: Extended;
+  const Min: Extended; const Max: Extended; var ErrorMsg: String;
+  const BorderIncluded: Boolean = False): Boolean; overload;
+
+function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
-  var ResultValue: Integer; const BorderIncluded: Boolean = False): Boolean;
+  var ResultValue: Integer; const BorderIncluded: Boolean = False): Boolean; overload;
 
-function IsBetweenFloat(const FieldName: String; const Value: Extended;
+function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Extended; const Max: Extended; var ErrorMsg: String;
-  const BorderIncluded: Boolean = False): Boolean;
-
-function TryStrToBetweenFloat(const FieldName: String; const Value: String;
-  const Min: Extended; const Max: Extended; var ErrorMsg: String;
-  var ResultValue: Extended; const BorderIncluded: Boolean = False): Boolean;
+  var ResultValue: Extended; const BorderIncluded: Boolean = False): Boolean; overload;
 
 function IsGreaterThanFloat(const FieldName: String; const Value: Extended;
   const Min: Extended; var ErrorMsg: String): Boolean;
@@ -178,15 +176,15 @@ begin
   end;
 end;
 
-{ IsBetweenInt возвращает:
+{ IsBetween возвращает:
   * True - если Value в пределах от Min до Max (включая
     эти границы, если BorderIncluded установлен в True
   * False - если Value не входит в диапазон от Min до Max,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsBetweenInt(const FieldName: String; const Value: Integer;
+function IsBetween(const FieldName: String; const Value: Integer;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
-  const BorderIncluded: Boolean = False): Boolean;
+  const BorderIncluded: Boolean = False): Boolean; overload;
 begin
   if BorderIncluded then
     Result := (Value >= Min) and (Value <= Max)
@@ -211,12 +209,12 @@ end;
     не входит в диапазон от Min до Max. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToBetweenInt(const FieldName: String; const Value: String;
+function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
-  var ResultValue: Integer; const BorderIncluded: Boolean = False): Boolean;
+  var ResultValue: Integer; const BorderIncluded: Boolean = False): Boolean; overload;
 begin
   if TryStrToIntMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsBetweenInt(FieldName, ResultValue, Min, Max, ErrorMsg, BorderIncluded)
+    Result := IsBetween(FieldName, ResultValue, Min, Max, ErrorMsg, BorderIncluded)
   else
     Result := False;
 end;
@@ -227,9 +225,9 @@ end;
   * False - если Value не входит в диапазон от Min до Max,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsBetweenFloat(const FieldName: String; const Value: Extended;
+function IsBetween(const FieldName: String; const Value: Extended;
   const Min: Extended; const Max: Extended; var ErrorMsg: String;
-  const BorderIncluded: Boolean = False): Boolean;
+  const BorderIncluded: Boolean = False): Boolean; overload;
 begin
   if BorderIncluded then
     Result := (Value >= Min) and (Value <= Max)
@@ -254,12 +252,12 @@ end;
     не входит в диапазон от Min до Max. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToBetweenFloat(const FieldName: String; const Value: String;
+function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Extended; const Max: Extended; var ErrorMsg: String;
-  var ResultValue: Extended; const BorderIncluded: Boolean = False): Boolean;
+  var ResultValue: Extended; const BorderIncluded: Boolean = False): Boolean; overload;
 begin
   if TryStrToFloatMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsBetweenFloat(FieldName, ResultValue, Min, Max, ErrorMsg, BorderIncluded)
+    Result := IsBetween(FieldName, ResultValue, Min, Max, ErrorMsg, BorderIncluded)
   else
     Result := False;
 end;

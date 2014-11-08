@@ -11,96 +11,79 @@ const
     Chr(VK_BACK), Chr(VK_DELETE), Chr(VK_RETURN), Chr(VK_TAB)];
 
 procedure KeyPressFloat(var Key: Char);
-
 procedure KeyPressInt(var Key: Char);
+
+function TryStrToNumMsg(const FieldName: String; const Value: String;
+  var ErrorMsg: String; var ResultValue: Extended): Boolean; overload;
+function TryStrToNumMsg(const FieldName: String; const Value: String;
+  var ErrorMsg: String; var ResultValue: Integer): Boolean; overload;
 
 function IsBetween(const FieldName: String; const Value: Integer;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
   const BorderIncluded: Boolean = False): Boolean; overload;
-
 function IsBetween(const FieldName: String; const Value: Extended;
   const Min: Extended; const Max: Extended; var ErrorMsg: String;
+  const BorderIncluded: Boolean = False): Boolean; overload;
+function IsBetween(const FieldName: String; const Str: String;
+  const Min: Integer; const Max: Integer; var ErrorMsg: String;
   const BorderIncluded: Boolean = False): Boolean; overload;
 
 function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
   var ResultValue: Integer; const BorderIncluded: Boolean = False): Boolean; overload;
-
 function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Extended; const Max: Extended; var ErrorMsg: String;
   var ResultValue: Extended; const BorderIncluded: Boolean = False): Boolean; overload;
 
-function IsGreaterThanFloat(const FieldName: String; const Value: Extended;
-  const Min: Extended; var ErrorMsg: String): Boolean;
+function IsGreaterThan(const FieldName: String; const Value: Extended;
+  const Min: Extended; var ErrorMsg: String): Boolean; overload;
+function IsGreaterThan(const FieldName: String; const Value: Integer;
+  const Min: Integer; var ErrorMsg: String): Boolean; overload;
+function IsGreaterThan(const FieldName: String; const Str: String;
+  const Min: Integer; var ErrorMsg: String): Boolean; overload;
 
-function TryStrToGreaterThanFloat(const FieldName: String; const Value: String;
-  const Min: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
+function TryStrToGreaterThan(const FieldName: String; const Value: String;
+  const Min: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean; overload;
+function TryStrToGreaterThan(const FieldName: String; const Value: String;
+  const Min: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean; overload;
 
-function IsGreaterThanOrEqualFloat(const FieldName: String; const Value: Extended;
-  const Min: Extended; var ErrorMsg: String): Boolean;
+function IsGreaterThanOrEqual(const FieldName: String; const Value: Extended;
+  const Min: Extended; var ErrorMsg: String): Boolean; overload;
+function IsGreaterThanOrEqual(const FieldName: String; const Value: Integer;
+  const Min: Integer; var ErrorMsg: String): Boolean; overload;
+function IsGreaterThanOrEqual(const FieldName: String; const Str: String;
+  const Min: Integer; var ErrorMsg: String): Boolean; overload;
 
-function TryStrToGreaterThanOrEqualFloat(const FieldName: String; const Value: String;
-  const Min: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
+function TryStrToGreaterThanOrEqual(const FieldName: String; const Value: String;
+  const Min: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean; overload;
+function TryStrToGreaterThanOrEqual(const FieldName: String; const Value: String;
+  const Min: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean; overload;
 
-function IsLessThanFloat(const FieldName: String; const Value: Extended;
-  const Max: Extended; var ErrorMsg: String): Boolean;
+function IsLessThan(const FieldName: String; const Value: Extended;
+  const Max: Extended; var ErrorMsg: String): Boolean; overload;
+function IsLessThan(const FieldName: String; const Value: Integer;
+  const Max: Integer; var ErrorMsg: String): Boolean; overload;
+function IsLessThan(const FieldName: String; const Str: String;
+  const Max: Integer; var ErrorMsg: String): Boolean; overload;
 
-function TryStrToLessThanFloat(const FieldName: String; const Value: String;
-  const Max: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
+function TryStrToLessThan(const FieldName: String; const Value: String;
+  const Max: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean; overload;
+function TryStrToLessThan(const FieldName: String; const Value: String;
+  const Max: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean; overload;
 
-function IsLessThanOrEqualFloat(const FieldName: String; const Value: Extended;
-  const Max: Extended; var ErrorMsg: String): Boolean;
+function IsLessThanOrEqual(const FieldName: String; const Value: Extended;
+  const Max: Extended; var ErrorMsg: String): Boolean; overload;
+function IsLessThanOrEqual(const FieldName: String; const Value: Integer;
+  const Max: Integer; var ErrorMsg: String): Boolean; overload;
+function IsLessThanOrEqual(const FieldName: String; const Str: String;
+  const Max: Integer; var ErrorMsg: String): Boolean; overload;
 
-function TryStrToLessThanOrEqualFloat(const FieldName: String; const Value: String;
-  const Max: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
-
-function TryStrToFloatMsg(const FieldName: String; const Value: String;
-  var ErrorMsg: String; var ResultValue: Extended): Boolean;
-
-function TryStrToIntMsg(const FieldName: String; const Value: String;
-  var ErrorMsg: String; var ResultValue: Integer): Boolean;
-
-function IsGreaterThanInt(const FieldName: String; const Value: Integer;
-  const Min: Integer; var ErrorMsg: String): Boolean;
-
-function TryStrToGreaterThanInt(const FieldName: String; const Value: String;
-  const Min: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
-
-function IsGreaterThanOrEqualInt(const FieldName: String; const Value: Integer;
-  const Min: Integer; var ErrorMsg: String): Boolean;
-
-function TryStrToGreaterThanOrEqualInt(const FieldName: String; const Value: String;
-  const Min: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
-
-function IsLessThanInt(const FieldName: String; const Value: Integer;
-  const Max: Integer; var ErrorMsg: String): Boolean;
-
-function TryStrToLessThanInt(const FieldName: String; const Value: String;
-  const Max: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
-
-function IsLessThanOrEqualInt(const FieldName: String; const Value: Integer;
-  const Max: Integer; var ErrorMsg: String): Boolean;
-
-function TryStrToLessThanOrEqualInt(const FieldName: String; const Value: String;
-  const Max: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
+function TryStrToLessThanOrEqual(const FieldName: String; const Value: String;
+  const Max: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean; overload;
+function TryStrToLessThanOrEqual(const FieldName: String; const Value: String;
+  const Max: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean; overload;
 
 function HasStrValue(const FieldName: String; const Value: String; var ErrorMsg: String): Boolean;
-
-function IsBetweenStr(const FieldName: String; const Str: String;
-  const Min: Integer; const Max: Integer; var ErrorMsg: String;
-  const BorderIncluded: Boolean = False): Boolean;
-
-function IsGreaterThanStr(const FieldName: String; const Str: String;
-  const Min: Integer; var ErrorMsg: String): Boolean;
-
-function IsGreaterThanOrEqualStr(const FieldName: String; const Str: String;
-  const Min: Integer; var ErrorMsg: String): Boolean;
-
-function IsLessThanStr(const FieldName: String; const Str: String;
-  const Max: Integer; var ErrorMsg: String): Boolean;
-
-function IsLessThanOrEqualStr(const FieldName: String; const Str: String;
-  const Max: Integer; var ErrorMsg: String): Boolean;
 
 implementation
 
@@ -146,7 +129,7 @@ end;
     В этом случае в ResultValue присваивается 0, а в ErrorMsg дописывается
     предупреждающее сообщение }
 
-function TryStrToFloatMsg(const FieldName: String; const Value: String;
+function TryStrToNumMsg(const FieldName: String; const Value: String;
   var ErrorMsg: String; var ResultValue: Extended): Boolean;
 begin
   Result := TryStrToFloat(Value, ResultValue);
@@ -164,7 +147,7 @@ end;
     В этом случае в ResultValue присваивается 0, а в ErrorMsg дописывается
     предупреждающее сообщение }
 
-function TryStrToIntMsg(const FieldName: String; const Value: String;
+function TryStrToNumMsg(const FieldName: String; const Value: String;
   var ErrorMsg: String; var ResultValue: Integer): Boolean;
 begin
   Result := TryStrToInt(Value, ResultValue);
@@ -202,7 +185,7 @@ begin
         + IntToStr(Min) + ' до ' + IntToStr(Max) + '.' + sLineBreak;
 end;
 
-{ TryStrToBetweenInt возвращает:
+{ TryStrToBetween возвращает:
   * True - если Value - целое число в пределах от Min до Max (включая
     эти границы, если BorderIncluded установлен в True и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в целое число,
@@ -211,15 +194,15 @@ end;
 
 function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
-  var ResultValue: Integer; const BorderIncluded: Boolean = False): Boolean; overload;
+  var ResultValue: Integer; const BorderIncluded: Boolean = False): Boolean;
 begin
-  if TryStrToIntMsg(FieldName, Value, ErrorMsg, ResultValue) then
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
     Result := IsBetween(FieldName, ResultValue, Min, Max, ErrorMsg, BorderIncluded)
   else
     Result := False;
 end;
 
-{ IsBetweenFloat возвращает:
+{ IsBetween возвращает:
   * True - если Value в пределах от Min до Max (включая
     эти границы, если BorderIncluded установлен в True
   * False - если Value не входит в диапазон от Min до Max,
@@ -245,7 +228,7 @@ begin
         + FloatToStr(Min) + ' до ' + FloatToStr(Max) + '.' + sLineBreak;
 end;
 
-{ TryStrToBetweenFloat возвращает:
+{ TryStrToBetween возвращает:
   * True - если Value - число с плавоющей точкой в пределах от Min до Max (включая
     эти границы, если BorderIncluded установлен в True и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в число с плавающей точкой,
@@ -254,20 +237,20 @@ end;
 
 function TryStrToBetween(const FieldName: String; const Value: String;
   const Min: Extended; const Max: Extended; var ErrorMsg: String;
-  var ResultValue: Extended; const BorderIncluded: Boolean = False): Boolean; overload;
+  var ResultValue: Extended; const BorderIncluded: Boolean = False): Boolean;
 begin
-  if TryStrToFloatMsg(FieldName, Value, ErrorMsg, ResultValue) then
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
     Result := IsBetween(FieldName, ResultValue, Min, Max, ErrorMsg, BorderIncluded)
   else
     Result := False;
 end;
 
-{ IsGreaterThanFloat возвращает:
+{ IsGreaterThan возвращает:
   * True - если Value больше Min
   * False - если Value меньше или равно Min,
     в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsGreaterThanFloat(const FieldName: String; const Value: Extended;
+function IsGreaterThan(const FieldName: String; const Value: Extended;
   const Min: Extended; var ErrorMsg: String): Boolean;
 begin
   Result := (Value > Min);
@@ -276,26 +259,26 @@ begin
       + FloatToStr(Min) + '.' + sLineBreak;
 end;
 
-{ TryStrToGreaterThanFloat возвращает:
+{ TryStrToGreaterThan возвращает:
   * True - если Value - число с плавоющей точкой больше Min и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в число с плавающей точкой,
     и оно меньше или равно Min. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToGreaterThanFloat(const FieldName: String; const Value: String;
+function TryStrToGreaterThan(const FieldName: String; const Value: String;
   const Min: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
 begin
-  if TryStrToFloatMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsGreaterThanFloat(FieldName, ResultValue, Min, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsGreaterThan(FieldName, ResultValue, Min, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsGreaterThanOrEqualFloat возвращает:
+{ IsGreaterThanOrEqual возвращает:
   * True - если Value больше или равно Min
   * False - если Value меньше Min, в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsGreaterThanOrEqualFloat(const FieldName: String; const Value: Extended;
+function IsGreaterThanOrEqual(const FieldName: String; const Value: Extended;
   const Min: Extended; var ErrorMsg: String): Boolean;
 begin
   Result := (Value >= Min);
@@ -304,27 +287,27 @@ begin
       + FloatToStr(Min) + '.' + sLineBreak;
 end;
 
-{ TryStrToGreaterThanOrEqualFloat возвращает:
+{ TryStrToGreaterThanOrEqual возвращает:
   * True - если Value - число с плавоющей точкой больше или равно Min и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в число с плавающей точкой,
     и оно меньше Min. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToGreaterThanOrEqualFloat(const FieldName: String; const Value: String;
+function TryStrToGreaterThanOrEqual(const FieldName: String; const Value: String;
   const Min: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
 begin
-  if TryStrToFloatMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsGreaterThanOrEqualFloat(FieldName, ResultValue, Min, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsGreaterThanOrEqual(FieldName, ResultValue, Min, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsLessThanFloat возвращает:
+{ IsLessThan возвращает:
   * True - если Value меньше Max
   * False - если Value больше или равно Max,
     в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsLessThanFloat(const FieldName: String; const Value: Extended;
+function IsLessThan(const FieldName: String; const Value: Extended;
   const Max: Extended; var ErrorMsg: String): Boolean;
 begin
   Result := (Value < Max);
@@ -333,27 +316,27 @@ begin
       + FloatToStr(Max) + '.' + sLineBreak;
 end;
 
-{ TryStrToLessThanFloat возвращает:
+{ TryStrToLessThan возвращает:
   * True - если Value - число с плавоющей точкой меньше Max и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в число с плавающей точкой,
     и оно больше или равно Max. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToLessThanFloat(const FieldName: String; const Value: String;
+function TryStrToLessThan(const FieldName: String; const Value: String;
   const Max: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
 begin
-  if TryStrToFloatMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsLessThanFloat(FieldName, ResultValue, Max, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsLessThan(FieldName, ResultValue, Max, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsLessThanOrEqualFloat возвращает:
+{ IsLessThanOrEqual возвращает:
   * True - если Value меньше или равно Max
   * False - если Value больше Max,
     в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsLessThanOrEqualFloat(const FieldName: String; const Value: Extended;
+function IsLessThanOrEqual(const FieldName: String; const Value: Extended;
   const Max: Extended; var ErrorMsg: String): Boolean;
 begin
   Result := (Value <= Max);
@@ -362,26 +345,26 @@ begin
       + FloatToStr(Max) + '.' + sLineBreak;
 end;
 
-{ TryStrToLessThanOrEqualFloat возвращает:
+{ TryStrToLessThanOrEqual возвращает:
   * True - если Value - число с плавоющей точкой меньше или равно Max и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в число с плавающей точкой,
     и оно больше Max. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToLessThanOrEqualFloat(const FieldName: String; const Value: String;
+function TryStrToLessThanOrEqual(const FieldName: String; const Value: String;
   const Max: Extended; var ErrorMsg: String; var ResultValue: Extended): Boolean;
 begin
-  if TryStrToFloatMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsLessThanFloat(FieldName, ResultValue, Max, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsLessThan(FieldName, ResultValue, Max, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsGreaterThanInt возвращает:
+{ IsGreaterThan возвращает:
   * True - если Value больше Min
   * False - если Value меньше или равно Min, в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsGreaterThanInt(const FieldName: String; const Value: Integer;
+function IsGreaterThan(const FieldName: String; const Value: Integer;
   const Min: Integer; var ErrorMsg: String): Boolean;
 begin
   Result := (Value > Min);
@@ -390,26 +373,26 @@ begin
       + IntToStr(Min) + '.' + sLineBreak;
 end;
 
-{ TryStrToGreaterThanInt возвращает:
+{ TryStrToGreaterThan возвращает:
   * True - если Value - целое число, оно больше Min и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в целое число
     и оно меньше или равно Min. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToGreaterThanInt(const FieldName: String; const Value: String;
+function TryStrToGreaterThan(const FieldName: String; const Value: String;
   const Min: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
 begin
-  if TryStrToIntMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsGreaterThanInt(FieldName, ResultValue, Min, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsGreaterThan(FieldName, ResultValue, Min, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsGreaterThanOrEqualInt возвращает:
+{ IsGreaterThanOrEqual возвращает:
   * True - если Value больше или равно Min
   * False - если Value меньше Min, в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsGreaterThanOrEqualInt(const FieldName: String; const Value: Integer;
+function IsGreaterThanOrEqual(const FieldName: String; const Value: Integer;
   const Min: Integer; var ErrorMsg: String): Boolean;
 begin
   Result := (Value >= Min);
@@ -418,26 +401,26 @@ begin
       + IntToStr(Min) + '.' + sLineBreak;
 end;
 
-{ TryStrToGreaterThanOrEqualInt возвращает:
+{ TryStrToGreaterThanOrEqual возвращает:
   * True - если Value - целое число, оно больше или равно Min и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в целое число
     и оно меньше Min. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToGreaterThanOrEqualInt(const FieldName: String; const Value: String;
+function TryStrToGreaterThanOrEqual(const FieldName: String; const Value: String;
   const Min: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
 begin
-  if TryStrToIntMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsGreaterThanOrEqualInt(FieldName, ResultValue, Min, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsGreaterThanOrEqual(FieldName, ResultValue, Min, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsLessThanInt возвращает:
+{ IsLessThan возвращает:
   * True - если Value меньше Max
   * False - если Value больше или равно Max, в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsLessThanInt(const FieldName: String; const Value: Integer;
+function IsLessThan(const FieldName: String; const Value: Integer;
   const Max: Integer; var ErrorMsg: String): Boolean;
 begin
   Result := (Value < Max);
@@ -446,26 +429,26 @@ begin
       + IntToStr(Max) + '.' + sLineBreak;
 end;
 
-{ TryStrToLessThanInt возвращает:
+{ TryStrToLessThan возвращает:
   * True - если Value - целое число, оно меньше Max и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в целое число
     и оно больше или равно Max. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToLessThanInt(const FieldName: String; const Value: String;
+function TryStrToLessThan(const FieldName: String; const Value: String;
   const Max: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
 begin
-  if TryStrToIntMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsLessThanInt(FieldName, ResultValue, Max, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsLessThan(FieldName, ResultValue, Max, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsLessThanOrEqualInt возвращает:
+{ IsLessThanOrEqual возвращает:
   * True - если Value меньше или равно Max
   * False - если Value больше Max, в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsLessThanOrEqualInt(const FieldName: String; const Value: Integer;
+function IsLessThanOrEqual(const FieldName: String; const Value: Integer;
   const Max: Integer; var ErrorMsg: String): Boolean;
 begin
   Result := (Value <= Max);
@@ -474,28 +457,28 @@ begin
       + IntToStr(Max) + '.' + sLineBreak;
 end;
 
-{ TryStrToLessThanOrEqualInt возвращает:
+{ TryStrToLessThanOrEqual возвращает:
   * True - если Value - целое число, оно меньше или равно Max и записывает в ResulValue это число
   * False - если Value: невозможно преобразовать в целое число
     и оно больше Max. В этом случае в ResultValue присваивается 0,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function TryStrToLessThanOrEqualInt(const FieldName: String; const Value: String;
+function TryStrToLessThanOrEqual(const FieldName: String; const Value: String;
   const Max: Integer; var ErrorMsg: String; var ResultValue: Integer): Boolean;
 begin
-  if TryStrToIntMsg(FieldName, Value, ErrorMsg, ResultValue) then
-    Result := IsLessThanOrEqualInt(FieldName, ResultValue, Max, ErrorMsg)
+  if TryStrToNumMsg(FieldName, Value, ErrorMsg, ResultValue) then
+    Result := IsLessThanOrEqual(FieldName, ResultValue, Max, ErrorMsg)
   else
     Result := False;
 end;
 
-{ IsBetweenStr возвращает:
+{ IsBetween возвращает:
   * True - если длина строки Str в пределах от Min до Max (включая
     эти границы, если BorderIncluded установлен в True
   * False - если длина строки Str не входит в диапазон от Min до Max,
     а в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsBetweenStr(const FieldName: String; const Str: String;
+function IsBetween(const FieldName: String; const Str: String;
   const Min: Integer; const Max: Integer; var ErrorMsg: String;
   const BorderIncluded: Boolean = False): Boolean;
 var
@@ -518,12 +501,12 @@ begin
         + IntToStr(Min) + ' до ' + IntToStr(Max) + '.' + sLineBreak;
 end;
 
-{ IsGreaterThanStr возвращает:
+{ IsGreaterThan возвращает:
   * True - если длина строки Str больше Min
   * False - если длина строки Str меньше или равно Min,
     в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsGreaterThanStr(const FieldName: String; const Str: String;
+function IsGreaterThan(const FieldName: String; const Str: String;
   const Min: Integer; var ErrorMsg: String): Boolean;
 var
   StrLen: Integer;
@@ -535,12 +518,12 @@ begin
       + IntToStr(Min) + '.' + sLineBreak;
 end;
 
-{ IsGreaterThanOrEqualStr возвращает:
+{ IsGreaterThanOrEqual возвращает:
   * True - если длина строки Str больше или равно Min
   * False - если длина строки Str меньше Min,
     в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsGreaterThanOrEqualStr(const FieldName: String; const Str: String;
+function IsGreaterThanOrEqual(const FieldName: String; const Str: String;
   const Min: Integer; var ErrorMsg: String): Boolean;
 var
   StrLen: Integer;
@@ -552,12 +535,12 @@ begin
       + IntToStr(Min) + '.' + sLineBreak;
 end;
 
-{ IsLessThanStr возвращает:
+{ IsLessThan возвращает:
   * True - если длина строки Str меньше Max
   * False - если длина строки Str больше или равно Max,
     в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsLessThanStr(const FieldName: String; const Str: String;
+function IsLessThan(const FieldName: String; const Str: String;
   const Max: Integer; var ErrorMsg: String): Boolean;
 var
   StrLen: Integer;
@@ -569,12 +552,12 @@ begin
       + IntToStr(Max) + '.' + sLineBreak;
 end;
 
-{ IsLessThanOrEqualStr возвращает:
+{ IsLessThanOrEqual возвращает:
   * True - если длина строки Str меньше или равно Max
   * False - если длина строки Str больше Max,
     в ErrorMsg дописывается предупреждающее сообщение }
 
-function IsLessThanOrEqualStr(const FieldName: String; const Str: String;
+function IsLessThanOrEqual(const FieldName: String; const Str: String;
   const Max: Integer; var ErrorMsg: String): Boolean;
 var
   StrLen: Integer;

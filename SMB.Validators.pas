@@ -4,10 +4,9 @@ uses
   System.SysUtils, Windows;
 
 const
-  TIntInputKeysSet = ['+', '-', '0'..'9', Chr(VK_BACK), Chr(VK_DELETE),
-    Chr(VK_RETURN), Chr(VK_TAB)];
+  TIntInputKeysSet = ['0'..'9', Chr(VK_BACK), '-', Chr(VK_RETURN), Chr(VK_TAB)];
 
-  TFloatInputKeysSet = ['+', '-', '0'..'9', '.', ',',
+  TFloatInputKeysSet = ['0'..'9', '-', '.', ',',
     Chr(VK_BACK), Chr(VK_DELETE), Chr(VK_RETURN), Chr(VK_TAB)];
 
 procedure KeyPressFloat(var Key: Char);

@@ -7,10 +7,11 @@ uses
 type
   TModel = class
   private
+    FConnection: TADOConnection;
     FDataSources: TDictionary<String, TDataSource>;
     function GetDataSource(aName: String): TDataSource;
   public
-    constructor Create;
+    constructor Create; virtual;
     destructor Destroy; override;
     property DataSource[aName: String]: TDataSource read GetDataSource;
   protected
@@ -27,7 +28,7 @@ var
   TempDS: TDataSource;
 begin
   TempDS := TDataSource.Create(nil);
-  TempDS.DataSet := CreateADOQuery(TempDS, DefaultADOConnection, aSQLQuery);
+  TempDS.DataSet := CreateADOQuery(TempDS, FConnection, aSQLQuery);
   if Assigned(aSQLParams) then
     (TempDS.DataSet as TADOQuery).Parameters := aSQLParams;
 
@@ -37,6 +38,7 @@ end;
 constructor TModel.Create;
 begin
   FDataSources := TDictionary<String, TDataSource>.Create;
+  FConnection   := GetConnection;
 end;
 
 destructor TModel.Destroy;

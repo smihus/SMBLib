@@ -4,48 +4,57 @@ interface
 uses
   System.Classes, Vcl.Menus, SMBBaseMDIChild, System.Generics.Collections;
 type
-  TSMBFormManager = class
-  private
-    FFormList         : TDictionary<String, TSMBBaseMDIChildClass>;
-    FMenuItemNameList : TDictionary<String, String>;
-    function AppendItemTo(var AMenuItem: TMenuItem;
-      const AMenuItemName: String): TMenuItem;
-    procedure OnClickItem(Sender: TObject);
-  public
-    constructor Create;
-    destructor Destroy; override;
-    function CreateForm(const aName: String; aOwner: TComponent): TSMBBaseMDIChild;
-    procedure RegisterForm(const ANameForm: String;
-      AMDIChild: TSMBBaseMDIChildClass; const AMenuItemName: String = '');
+  IFormManager = interface
+  ['{7E89B366-4516-446B-8A52-854791CAD34A}']
+    function CreateForm(const Name: String; Owner: TComponent): TSMBBaseMDIChild;
+    procedure RegisterForm(const NameForm: String;
+      MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '');
     procedure AppendTo(Menu: TMainMenu);
   end;
 
 var
-  DefaultSMBFormManager: TSMBFormManager;
+  FormManager: IFormManager;
 
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils, SMB.Model;
+
+type
+  TFormManager = class(TInterfacedObject, IFormManager)
+  private
+    FFormList         : TDictionary<String, TSMBBaseMDIChildClass>;
+    FMenuItemNameList : TDictionary<String, String>;
+    function AppendItemTo(var MenuItem: TMenuItem;
+      const MenuItemName: String): TMenuItem;
+    procedure OnClickItem(Sender: TObject);
+  public
+    constructor Create;
+    destructor Destroy; override;
+    function CreateForm(const Name: String; Owner: TComponent): TSMBBaseMDIChild;
+    procedure RegisterForm(const NameForm: String;
+      MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '');
+    procedure AppendTo(Menu: TMainMenu);
+  end;
 
 { TSMBFormManager }
 
-function TSMBFormManager.AppendItemTo(var AMenuItem: TMenuItem;
-  const AMenuItemName: String): TMenuItem;
+function TFormManager.AppendItemTo(var MenuItem: TMenuItem;
+  const MenuItemName: String): TMenuItem;
 var
   Item: TMenuItem;
 begin
-  Item := AMenuItem.Find(AMenuItemName);
+  Item := MenuItem.Find(MenuItemName);
   if not Assigned(Item) then
   begin
-    Item := TMenuItem.Create(AMenuItem);
-    Item.Caption := AMenuItemName;
-    AMenuItem.Add(Item);
+    Item := TMenuItem.Create(MenuItem);
+    Item.Caption := MenuItemName;
+    MenuItem.Add(Item);
   end;
   Result := Item;
 end;
 
-procedure TSMBFormManager.AppendTo(Menu: TMainMenu);
+procedure TFormManager.AppendTo(Menu: TMainMenu);
 var
   Enum: TDictionary<String, String>.TPairEnumerator;
   Key, Value: String;
@@ -61,36 +70,36 @@ begin
     MenuItemNames := Value.Split(['/']);
     CurrentItem   := Menu.Items;
     for i := 0 to Length(MenuItemNames)-1 do
-      CurrentItem := AppendItemTo(CurrentItem, MenuItemNames[i]);
+      CurrentItem := AppendItemTo(CurrentItem, Trim(MenuItemNames[i]));
     CurrentItem.Name    := Key;
     CurrentItem.OnClick := OnClickItem;
   end;
 end;
 
-constructor TSMBFormManager.Create;
+constructor TFormManager.Create;
 begin
   FFormList         := TDictionary<String, TSMBBaseMDIChildClass>.Create;
   FMenuItemNameList := TDictionary<String, String>.Create;
 end;
 
-function TSMBFormManager.CreateForm(const aName: String; aOwner: TComponent): TSMBBaseMDIChild;
+function TFormManager.CreateForm(const Name: String; Owner: TComponent): TSMBBaseMDIChild;
 var
   SMBBaseMDIChildClass: TSMBBaseMDIChildClass;
 begin
-  if FFormList.TryGetValue(aName, SMBBaseMDIChildClass) then
-    Result := SMBBaseMDIChildClass.Create(aOwner)
+  if FFormList.TryGetValue(Name, SMBBaseMDIChildClass) then
+    Result := SMBBaseMDIChildClass.Create(Owner)
   else
     raise Exception.Create('Программа пытается вызвать незарегистрированную форму!!! Обратитесь к разработчику.');
 end;
 
-destructor TSMBFormManager.Destroy;
+destructor TFormManager.Destroy;
 begin
   FreeAndNil(FFormList);
   FreeAndNil(FMenuItemNameList);
   inherited;
 end;
 
-procedure TSMBFormManager.OnClickItem(Sender: TObject);
+procedure TFormManager.OnClickItem(Sender: TObject);
 var
   MenuItem: TMenuItem;
 begin
@@ -98,18 +107,15 @@ begin
   CreateForm(MenuItem.Name, MenuItem);
 end;
 
-procedure TSMBFormManager.RegisterForm(const ANameForm: String;
-  AMDIChild: TSMBBaseMDIChildClass; const AMenuItemName: String = '');
+procedure TFormManager.RegisterForm(const NameForm: String;
+  MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '');
 begin
-  FFormList.Add(ANameForm, AMDIChild);
-  if Trim(AMenuItemName) <> '' then
-    FMenuItemNameList.Add(ANameForm, AMenuItemName);
+  FFormList.Add(NameForm, MDIChild);
+  if Trim(MenuItemName) <> '' then
+    FMenuItemNameList.Add(Trim(NameForm), Trim(MenuItemName));
 end;
 
 initialization
-  DefaultSMBFormManager := TSMBFormManager.Create;
-
-finalization
-  FreeAndNil(DefaultSMBFormManager);
+  FormManager := TFormManager.Create;
 
 end.

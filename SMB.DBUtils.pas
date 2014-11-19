@@ -27,7 +27,8 @@ begin
   Query.Connection:= Connection;
   Query.Active    := False;
   Query.SQL.Text  := QueryString;
-  Query.Active    := True;
+  if not Query.SQL.Text.IsEmpty then
+    Query.Active    := True;
   Result          := Query;
 end;
 
@@ -56,8 +57,7 @@ begin
   except
     on E: Exception do
     begin
-      Result.Free;
-      Result := nil;
+      FreeAndNil(Result);
       MessageDlg(
         'Ошибка соединения с базой данных: ' + E.Message + sLineBreak +
         'Обратитесь к администратору базы данных!', mtError, [mbOk], 0, mbOK);

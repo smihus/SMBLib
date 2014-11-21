@@ -11,12 +11,13 @@ type
     FADOQuery         : TADOQuery;
     FDataSource       : TDataSource;
   public
-    constructor Create(ConnectionManager: IConnectionManager); virtual;
     destructor Destroy; override;
     property DataSource: TDataSource read FDataSource;
+    constructor Create(ConnectionManager: IConnectionManager); virtual;
   protected
+    procedure Init; virtual; abstract;
     procedure ExecQuery(SQLQuery: String);
-    procedure SetDisplayLabel(FieldName: String; FieldLabel: String);
+    procedure SetFieldParameters(FieldName, FieldLabel: string; FieldWidth: Integer = 0);
 
   end;
 implementation
@@ -28,6 +29,7 @@ begin
   FConnectionManager  := ConnectionManager;
   CreateADOQueryAndDataSource(nil, FConnectionManager.Connection['EOGH'],
     '', FADOQuery, FDataSource);
+  Init;
 end;
 
 destructor TModel.Destroy;
@@ -50,9 +52,15 @@ begin
   end;
 end;
 
-procedure TModel.SetDisplayLabel(FieldName, FieldLabel: String);
+procedure TModel.SetFieldParameters(FieldName, FieldLabel: string; FieldWidth: Integer = 0);
 begin
-  FADOQuery.FieldByName(FieldName).DisplayLabel := FieldLabel;
+  with FADOQuery.FieldByName(FieldName) do
+  begin
+    DisplayLabel := FieldLabel;
+    if FieldWidth > 0 then
+      DisplayWidth := FieldWidth;
+  end;
+
 end;
 
 end.

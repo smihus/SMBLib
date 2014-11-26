@@ -18,11 +18,40 @@ type
     procedure Init; virtual; abstract;
     procedure ExecQuery(SQLQuery: String);
     procedure SetFieldParameters(FieldName, FieldLabel: string; FieldWidth: Integer = 0);
-
+    procedure AddCalcStringField(DataSet: TDataSet; FieldName,
+      DisplayLabel: String; DisplatySize: Integer);
   end;
 implementation
-
+uses
+  System.Classes;
 { TModel }
+
+procedure TModel.AddCalcStringField(DataSet: TDataSet; FieldName,
+  DisplayLabel: String; DisplatySize: Integer);
+var
+  f : TField;
+  i : Integer;
+begin
+  with DataSet do
+  begin
+    FieldDefs.Update;
+    Active := False;
+    for i := 0 to FieldDefs.Count - 1 do
+      if not Assigned(FindField(FieldDefs[i].Name)) then
+        FieldDefs.Items[i].CreateField(DataSet);
+    f := tStringField.Create(DataSet);
+    f.Name := DataSet.Name+FieldName;
+    f.FieldName := FieldName;
+    f.DisplayLabel := DisplayLabel;
+    f.DisplayWidth := DisplatySize;
+    f.Size         := DisplatySize;
+    f.Calculated := True;
+    f.DataSet := DataSet;
+
+    FieldDefs.Update;
+    Active := True;
+  end;
+end;
 
 constructor TModel.Create(ConnectionManager: IConnectionManager);
 begin

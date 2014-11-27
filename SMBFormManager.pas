@@ -8,8 +8,10 @@ type
   ['{7E89B366-4516-446B-8A52-854791CAD34A}']
     function CreateForm(const Name: String; Owner: TComponent): TSMBBaseMDIChild;
     procedure RegisterForm(const NameForm: String;
-      MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '');
+      MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '';
+      const MultiInstanceForm: Boolean = False);
     procedure AppendTo(Menu: TMainMenu);
+    procedure SetOwner(AOwner: TComponent);
   end;
 
 var
@@ -23,8 +25,10 @@ uses
 type
   TFormManager = class(TInterfacedObject, IFormManager)
   private
-    FFormList         : TDictionary<String, TSMBBaseMDIChildClass>;
-    FMenuItemNameList : TDictionary<String, String>;
+    FFormList             : TDictionary<String, TSMBBaseMDIChildClass>;
+    FMenuItemNameList     : TDictionary<String, String>;
+    FMultiInstanceFormList: TList<String>;
+    FOwner: TComponent;
     function AppendItemTo(var MenuItem: TMenuItem;
       const MenuItemName: String): TMenuItem;
     procedure OnClickItem(Sender: TObject);
@@ -32,9 +36,12 @@ type
     constructor Create;
     destructor Destroy; override;
     function CreateForm(const Name: String; Owner: TComponent): TSMBBaseMDIChild;
+    function OpenForm(const Name: String; Owner: TComponent): TSMBBaseMDIChild;
     procedure RegisterForm(const NameForm: String;
-      MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '');
+      MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '';
+      const MultiInstanceForm: Boolean = False);
     procedure AppendTo(Menu: TMainMenu);
+    procedure SetOwner(AOwner: TComponent);
   end;
 
 { TSMBFormManager }
@@ -78,8 +85,9 @@ end;
 
 constructor TFormManager.Create;
 begin
-  FFormList         := TDictionary<String, TSMBBaseMDIChildClass>.Create;
-  FMenuItemNameList := TDictionary<String, String>.Create;
+  FFormList             := TDictionary<String, TSMBBaseMDIChildClass>.Create;
+  FMenuItemNameList     := TDictionary<String, String>.Create;
+  FMultiInstanceFormList:= TList<String>.Create;
 end;
 
 function TFormManager.CreateForm(const Name: String; Owner: TComponent): TSMBBaseMDIChild;
@@ -96,6 +104,7 @@ destructor TFormManager.Destroy;
 begin
   FreeAndNil(FFormList);
   FreeAndNil(FMenuItemNameList);
+  FreeAndNil(FMultiInstanceFormList);
   inherited;
 end;
 
@@ -104,15 +113,36 @@ var
   MenuItem: TMenuItem;
 begin
   MenuItem := (Sender as TMenuItem);
-  CreateForm(MenuItem.Name, MenuItem);
+  if FMultiInstanceFormList.Contains(MenuItem.Name) then
+    CreateForm(MenuItem.Name, FOwner)
+  else
+    OpenForm(MenuItem.Name, FOwner);
+end;
+
+function TFormManager.OpenForm(const Name: String;
+  Owner: TComponent): TSMBBaseMDIChild;
+begin
+  Result := (FOwner.FindComponent(Name) as TSMBBaseMDIChildClass) ;
+  if Assigned(Result) then
+    Result.Show
+  else
+    Result := CreateForm(Name, Owner);
 end;
 
 procedure TFormManager.RegisterForm(const NameForm: String;
-  MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '');
+  MDIChild: TSMBBaseMDIChildClass; const MenuItemName: String = '';
+  const MultiInstanceForm: Boolean = False);
 begin
   FFormList.Add(NameForm, MDIChild);
   if Trim(MenuItemName) <> '' then
     FMenuItemNameList.Add(Trim(NameForm), Trim(MenuItemName));
+  if MultiInstanceForm then
+    FMultiInstanceFormList.Add(NameForm);
+end;
+
+procedure TFormManager.SetOwner(AOwner: TComponent);
+begin
+  FOwner := AOwner;
 end;
 
 initialization

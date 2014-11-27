@@ -11,7 +11,7 @@ type
     const aProvider: String; const aServer: string; const aDBName: String;
     const aLogin: String; const aPassword: String);
     procedure RemoveConnection(const ConnectionName: String);
-    property Connection[const ConnectionName: String]: TADOConnection read GetConnection;
+    property Connection[const ConnectionName: String]: TADOConnection read GetConnection; default;
   end;
 
 var

@@ -16,7 +16,7 @@ procedure CreateADOQueryAndDataSource(Owner: TComponent; const Connection:TADOCo
 
 implementation
 uses
-  System.SysUtils, Vcl.Dialogs;
+  System.SysUtils, Vcl.Dialogs, System.UITypes;
 { CreateADOQuery создает объект класса TADOQuery с одновременной инициализацией
   и выполнением запроса }
 function CreateADOQuery(Owner: TComponent; const Connection:TADOConnection; const QueryString: String):TADOQuery;

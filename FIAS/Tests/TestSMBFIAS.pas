@@ -26,11 +26,15 @@ type
   published
     procedure TestIsFiasGUIDValidGUID;
     procedure TestIsFiasGUIDInvalidGUID;
-    procedure TestFiasToStrValidGUID;
+    procedure TestFiasToStrValidHouseGUID1;
+    procedure TestFiasToStrValidHouseGUID2;
+    procedure TestFiasToStrValidHouseGUID3;
+    procedure TestFiasToStrValidStreetGUID;
+    procedure TestHouseRecToStr;
     procedure TestFiasToRecAddrValidGUIDofHouse;
     procedure TestFiasToRecAddrValidGUIDofStreet;
-    procedure TestFiasToRecAddrManyChangesOfHousesData;
-    procedure TestFiasToRecAddrOnDate;
+    procedure TestFiasToStrManyChangesOfHousesLatestDate;
+    procedure TestFiasToStrOnDate;
   end;
 
 implementation
@@ -68,70 +72,52 @@ begin
   CheckTrue(ReturnValue);
 end;
 
-procedure TestTSMBFias.TestFiasToRecAddrManyChangesOfHousesData;
+procedure TestTSMBFias.TestHouseRecToStr;
 var
-  ReturnValue   : TAddressElements;
-  FiasGUID      : string;
-  ExpectedResult: TAddressElements;
+  ReturnValue   : THouseRec;
+  FiasGUID      : String;
+  ExpectedResult: String;
 begin
-  FiasGUID       := '010d5247-9af5-4f8a-9ec4-ef4cbfb320cd';
-  ReturnValue    := FSMBFias.FiasToRecAddr(FiasGUID);
-  with ExpectedResult do
-  begin
-    PostalCode  := '445362';
-    BuildNum    := '';
-    HouseNum    := '10';
-    ESTStatName := 'Дом';
-    STRStatName := 'Не определено';
-    IFNSFL      := '6382';
-    IFNSUL      := '6382';
-    OKATO       := '36404000005';
-    OKTMO       := '36704000126';
-    StrucNum    := '';
-    TerrIFNSFL  := '6345';
-    TerrIFNSUL  := '6345';
-    NormDocID   := '';
-  end;
-  Check(ExpectedResult = ReturnValue);
+  FiasGUID       := 'db6c9245-05ff-4d38-b950-ff0a826b4ef1';
+  ReturnValue    := FSMBFias.FiasToAddr(FiasGUID);
+  ExpectedResult := '443067, Самарская обл, Самара г, Гагарина ул, д 137';
+  CheckEqualsString(ExpectedResult, ReturnValue);
 end;
 
-procedure TestTSMBFias.TestFiasToRecAddrOnDate;
+procedure TestTSMBFias.TestFiasToStrManyChangesOfHousesLatestDate;
 var
-  ReturnValue   : TAddressElements;
-  FiasGUID      : string;
-  ExpectedResult: TAddressElements;
+  ReturnValue   : String;
+  FiasGUID      : String;
+  ExpectedResult: String;
+begin
+  FiasGUID       := '772f147b-c1c2-4157-9b32-65bcaaaa1f63';
+  ReturnValue    := FSMBFias.FiasToAddr(FiasGUID);
+  ExpectedResult := 'Самарская обл, Новокуйбышевск г, Спортивная 1-я ул';
+  CheckEqualsString(ExpectedResult, ReturnValue);
+end;
+
+procedure TestTSMBFias.TestFiasToStrOnDate;
+var
+  ReturnValue   : String;
+  FiasGUID      : String;
+  ExpectedResult: String;
   OnDate        : TDate;
 begin
-  FiasGUID        := '010d5247-9af5-4f8a-9ec4-ef4cbfb320cd';
-  OnDate          := StrToDate('07.05.2014');
-  ReturnValue     := FSMBFias.FiasToRecAddr(FiasGUID, OnDate);
-  with ExpectedResult do
-  begin
-    PostalCode  := '445362';
-    BuildNum    := '';
-    HouseNum    := '10';
-    ESTStatName := 'Дом';
-    STRStatName := 'Не определено';
-    IFNSFL      := '6382';
-    IFNSUL      := '6382';
-    OKATO       := '36404000000';
-    OKTMO       := '36704000001';
-    StrucNum    := '';
-    TerrIFNSFL  := '6345';
-    TerrIFNSUL  := '6345';
-    NormDocID   := '';
-  end;
-  Check(ExpectedResult = ReturnValue);
+  FiasGUID        := '772f147b-c1c2-4157-9b32-65bcaaaa1f63';
+  OnDate          := StrToDate('31.12.1996');
+  ReturnValue     := FSMBFias.FiasToAddr(FiasGUID, OnDate);
+  ExpectedResult  := 'Самарская обл, Новокуйбышевск г, Первая Спортивная ул';
+  CheckEqualsString(ExpectedResult, ReturnValue);
 end;
 
 procedure TestTSMBFias.TestFiasToRecAddrValidGUIDofHouse;
 var
-  ReturnValue   : TAddressElements;
+  ReturnValue   : THouseRec;
   FiasGUID      : string;
-  ExpectedResult: TAddressElements;
+  ExpectedResult: THouseRec;
 begin
   FiasGUID       := 'db6c9245-05ff-4d38-b950-ff0a826b4ef1';
-  ReturnValue    := FSMBFias.FiasToRecAddr(FiasGUID);
+  ReturnValue    := FSMBFias.FiasToAddr(FiasGUID);
   with ExpectedResult do
   begin
     PostalCode  := '443067';
@@ -146,34 +132,240 @@ begin
     StrucNum    := '';
     TerrIFNSFL  := '';
     TerrIFNSUL  := '';
+    AOGUID      := 'd59f0c62-71b4-49a1-a715-b3e82089c19b';
     NormDocID   := '';
+
+//  Данные об адресном элементе (в данном случае об Области)
+    New(Address);
+    Address^.AOLevel       := '1';
+    Address^.ParentGUID    := '';
+    Address^.ActStatus     := '1';
+    Address^.CurrStatus    := '0';
+    Address^.ShortName     := 'обл';
+    Address^.FormalName    := 'Самарская';
+    Address^.AreaCode      := '000';
+    Address^.CentStatus    := '0';
+    Address^.CityCode      := '000';
+    Address^.Code          := '6300000000000';
+    Address^.IFNSFL        := '6300';
+    Address^.IFNSUL        := '6300';
+    Address^.OffName       := 'Самарская';
+    Address^.OKATO         := '36000000000';
+    Address^.OKTMO         := '';
+    Address^.PlaceCode     := '000';
+    Address^.PlainCode     := '63000000000';
+    Address^.PostalCode    := '';
+    Address^.RegionCode    := '63';
+    Address^.StreetCode    := '0000';
+    Address^.TerrIFNSFL    := '';
+    Address^.TerrIFNSUL    := '';
+    Address^.NormDocID     := '';
+
+//  Данные о следующем по вложенности элементе (в данном случае о Городе)
+    New(Address^.AddrElement);
+    Address^.AddrElement^.AOLevel       := '4';
+    Address^.AddrElement^.ParentGUID    := 'df3d7359-afa9-4aaa-8ff9-197e73906b1c';
+    Address^.AddrElement^.ActStatus     := '1';
+    Address^.AddrElement^.CurrStatus    := '0';
+    Address^.AddrElement^.ShortName     := 'г';
+    Address^.AddrElement^.FormalName    := 'Самара';
+    Address^.AddrElement^.AreaCode      := '000';
+    Address^.AddrElement^.CentStatus    := '2';
+    Address^.AddrElement^.CityCode      := '001';
+    Address^.AddrElement^.Code          := '6300000100000';
+    Address^.AddrElement^.IFNSFL        := '';
+    Address^.AddrElement^.IFNSUL        := '';
+    Address^.AddrElement^.OffName       := 'Самара';
+    Address^.AddrElement^.OKATO         := '36401000000';
+    Address^.AddrElement^.OKTMO         := '36701000';
+    Address^.AddrElement^.PlaceCode     := '000';
+    Address^.AddrElement^.PlainCode     := '63000001000';
+    Address^.AddrElement^.PostalCode    := '';
+    Address^.AddrElement^.RegionCode    := '63';
+    Address^.AddrElement^.StreetCode    := '0000';
+    Address^.AddrElement^.TerrIFNSFL    := '';
+    Address^.AddrElement^.TerrIFNSUL    := '';
+    Address^.AddrElement^.NormDocID     := '';
+
+//  Данные о следующем по вложенности элементе (в данном случае об Улице)
+    New(Address^.AddrElement^.AddrElement);
+    Address^.AddrElement^.AddrElement^.AOLevel       := '7';
+    Address^.AddrElement^.AddrElement^.ParentGUID    := 'bb035cc3-1dc2-4627-9d25-a1bf2d4b936b';
+    Address^.AddrElement^.AddrElement^.ActStatus     := '1';
+    Address^.AddrElement^.AddrElement^.CurrStatus    := '0';
+    Address^.AddrElement^.AddrElement^.ShortName     := 'ул';
+    Address^.AddrElement^.AddrElement^.FormalName    := 'Гагарина';
+    Address^.AddrElement^.AddrElement^.AreaCode      := '000';
+    Address^.AddrElement^.AddrElement^.CentStatus    := '0';
+    Address^.AddrElement^.AddrElement^.CityCode      := '001';
+    Address^.AddrElement^.AddrElement^.Code          := '63000001000091000';
+    Address^.AddrElement^.AddrElement^.IFNSFL        := '';
+    Address^.AddrElement^.AddrElement^.IFNSUL        := '';
+    Address^.AddrElement^.AddrElement^.OffName       := 'Гагарина';
+    Address^.AddrElement^.AddrElement^.OKATO         := '';
+    Address^.AddrElement^.AddrElement^.OKTMO         := '36701000';
+    Address^.AddrElement^.AddrElement^.PlaceCode     := '000';
+    Address^.AddrElement^.AddrElement^.PlainCode     := '630000010000910';
+    Address^.AddrElement^.AddrElement^.PostalCode    := '';
+    Address^.AddrElement^.AddrElement^.RegionCode    := '63';
+    Address^.AddrElement^.AddrElement^.StreetCode    := '0910';
+    Address^.AddrElement^.AddrElement^.TerrIFNSFL    := '';
+    Address^.AddrElement^.AddrElement^.TerrIFNSUL    := '';
+    Address^.AddrElement^.AddrElement^.NormDocID     := '';
+    Address^.AddrElement^.AddrElement^.AddrElement   := nil;
   end;
   Check(ExpectedResult = ReturnValue);
 end;
 
 procedure TestTSMBFias.TestFiasToRecAddrValidGUIDofStreet;
 var
-  ReturnValue   : TAddressElements;
+  ReturnValue   : THouseRec;
   FiasGUID      : string;
-  ExpectedResult: TAddressElements;
+  ExpectedResult: THouseRec;
 begin
   FiasGUID       := 'd59f0c62-71b4-49a1-a715-b3e82089c19b';
-  ReturnValue    := FSMBFias.FiasToRecAddr(FiasGUID);
+  ReturnValue    := FSMBFias.FiasToAddr(FiasGUID);
   with ExpectedResult do
   begin
-    PostalCode := '443067';
+    PostalCode  := '';
+    BuildNum    := '';
+    HouseNum    := '';
+    ESTStatName := '';
+    STRStatName := '';
+    IFNSFL      := '';
+    IFNSUL      := '';
+    OKATO       := '';
+    OKTMO       := '';
+    StrucNum    := '';
+    TerrIFNSFL  := '';
+    TerrIFNSUL  := '';
+    AOGUID      := 'd59f0c62-71b4-49a1-a715-b3e82089c19b';
+    NormDocID   := '';
+
+//  Данные об адресном элементе (в данном случае об Области)
+    New(Address);
+    Address^.AOLevel       := '1';
+    Address^.ParentGUID    := '';
+    Address^.ActStatus     := '1';
+    Address^.CurrStatus    := '0';
+    Address^.ShortName     := 'обл';
+    Address^.FormalName    := 'Самарская';
+    Address^.AreaCode      := '000';
+    Address^.CentStatus    := '0';
+    Address^.CityCode      := '000';
+    Address^.Code          := '6300000000000';
+    Address^.IFNSFL        := '6300';
+    Address^.IFNSUL        := '6300';
+    Address^.OffName       := 'Самарская';
+    Address^.OKATO         := '36000000000';
+    Address^.OKTMO         := '';
+    Address^.PlaceCode     := '000';
+    Address^.PlainCode     := '63000000000';
+    Address^.PostalCode    := '';
+    Address^.RegionCode    := '63';
+    Address^.StreetCode    := '0000';
+    Address^.TerrIFNSFL    := '';
+    Address^.TerrIFNSUL    := '';
+    Address^.NormDocID     := '';
+
+//  Данные о следующем по вложенности элементе (в данном случае о Городе)
+    New(Address^.AddrElement);
+    Address^.AddrElement^.AOLevel       := '4';
+    Address^.AddrElement^.ParentGUID    := 'df3d7359-afa9-4aaa-8ff9-197e73906b1c';
+    Address^.AddrElement^.ActStatus     := '1';
+    Address^.AddrElement^.CurrStatus    := '0';
+    Address^.AddrElement^.ShortName     := 'г';
+    Address^.AddrElement^.FormalName    := 'Самара';
+    Address^.AddrElement^.AreaCode      := '000';
+    Address^.AddrElement^.CentStatus    := '2';
+    Address^.AddrElement^.CityCode      := '001';
+    Address^.AddrElement^.Code          := '6300000100000';
+    Address^.AddrElement^.IFNSFL        := '';
+    Address^.AddrElement^.IFNSUL        := '';
+    Address^.AddrElement^.OffName       := 'Самара';
+    Address^.AddrElement^.OKATO         := '36401000000';
+    Address^.AddrElement^.OKTMO         := '36701000';
+    Address^.AddrElement^.PlaceCode     := '000';
+    Address^.AddrElement^.PlainCode     := '63000001000';
+    Address^.AddrElement^.PostalCode    := '';
+    Address^.AddrElement^.RegionCode    := '63';
+    Address^.AddrElement^.StreetCode    := '0000';
+    Address^.AddrElement^.TerrIFNSFL    := '';
+    Address^.AddrElement^.TerrIFNSUL    := '';
+    Address^.AddrElement^.NormDocID     := '';
+
+//  Данные о следующем по вложенности элементе (в данном случае об Улице)
+    New(Address^.AddrElement^.AddrElement);
+    Address^.AddrElement^.AddrElement^.AOLevel       := '7';
+    Address^.AddrElement^.AddrElement^.ParentGUID    := 'bb035cc3-1dc2-4627-9d25-a1bf2d4b936b';
+    Address^.AddrElement^.AddrElement^.ActStatus     := '1';
+    Address^.AddrElement^.AddrElement^.CurrStatus    := '0';
+    Address^.AddrElement^.AddrElement^.ShortName     := 'ул';
+    Address^.AddrElement^.AddrElement^.FormalName    := 'Гагарина';
+    Address^.AddrElement^.AddrElement^.AreaCode      := '000';
+    Address^.AddrElement^.AddrElement^.CentStatus    := '0';
+    Address^.AddrElement^.AddrElement^.CityCode      := '001';
+    Address^.AddrElement^.AddrElement^.Code          := '63000001000091000';
+    Address^.AddrElement^.AddrElement^.IFNSFL        := '';
+    Address^.AddrElement^.AddrElement^.IFNSUL        := '';
+    Address^.AddrElement^.AddrElement^.OffName       := 'Гагарина';
+    Address^.AddrElement^.AddrElement^.OKATO         := '';
+    Address^.AddrElement^.AddrElement^.OKTMO         := '36701000';
+    Address^.AddrElement^.AddrElement^.PlaceCode     := '000';
+    Address^.AddrElement^.AddrElement^.PlainCode     := '630000010000910';
+    Address^.AddrElement^.AddrElement^.PostalCode    := '';
+    Address^.AddrElement^.AddrElement^.RegionCode    := '63';
+    Address^.AddrElement^.AddrElement^.StreetCode    := '0910';
+    Address^.AddrElement^.AddrElement^.TerrIFNSFL    := '';
+    Address^.AddrElement^.AddrElement^.TerrIFNSUL    := '';
+    Address^.AddrElement^.AddrElement^.NormDocID     := '';
+    Address^.AddrElement^.AddrElement^.AddrElement   := nil;
   end;
   Check(ExpectedResult = ReturnValue);
 end;
 
-procedure TestTSMBFias.TestFiasToStrValidGUID;
+procedure TestTSMBFias.TestFiasToStrValidHouseGUID1;
 var
   ReturnValue: string;
   FiasGUID: string;
 begin
+// Пример простого дома без литер и строений
   FiasGUID    := 'db6c9245-05ff-4d38-b950-ff0a826b4ef1';
-  ReturnValue := FSMBFias.FiasToStr(FiasGUID);
+  ReturnValue := FSMBFias.FiasToAddr(FiasGUID);
   CheckEqualsString('443067, Самарская обл, Самара г, Гагарина ул, д 137', ReturnValue);
+end;
+
+procedure TestTSMBFias.TestFiasToStrValidHouseGUID2;
+var
+  ReturnValue: string;
+  FiasGUID: string;
+begin
+// Пример дома с корпусом
+  FiasGUID    := '8920ed97-b14e-445f-9028-5efc0626074a';
+  ReturnValue := FSMBFias.FiasToAddr(FiasGUID);
+  CheckEqualsString('446209, Самарская обл, Новокуйбышевск г, Балашовская ул, д 1 корп Б', ReturnValue);
+end;
+
+procedure TestTSMBFias.TestFiasToStrValidHouseGUID3;
+var
+  ReturnValue: string;
+  FiasGUID: string;
+begin
+// Пример владения с номером корпуса и номером строения
+  FiasGUID    := '1342359c-fa60-4112-8400-abe31a6a1c11';
+  ReturnValue := FSMBFias.FiasToAddr(FiasGUID);
+  CheckEqualsString('443082, Самарская обл, Самара г, Лунная ул, вл 3 корп а стр 3а', ReturnValue);
+end;
+
+procedure TestTSMBFias.TestFiasToStrValidStreetGUID;
+var
+  ReturnValue: string;
+  FiasGUID: string;
+begin
+  // Пример улицы без указания дома
+  FiasGUID    := 'd59f0c62-71b4-49a1-a715-b3e82089c19b';
+  ReturnValue := FSMBFias.FiasToAddr(FiasGUID);
+  CheckEqualsString('Самарская обл, Самара г, Гагарина ул', ReturnValue);
 end;
 
 initialization
